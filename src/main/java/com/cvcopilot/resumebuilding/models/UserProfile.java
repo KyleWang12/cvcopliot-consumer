@@ -1,4 +1,4 @@
-package com.cvcopilot.resumebuilding.models.userProfile;
+package com.cvcopilot.resumebuilding.models;
 
 import jakarta.persistence.Id;
 import java.util.ArrayList;
@@ -19,13 +19,7 @@ public class UserProfile {
     private List<WorkExperience> workExperiences;
     private List<Education> educations;
 
-    public UserProfile() {
-//        this.links = new ArrayList<>();
-//        this.skills = new ArrayList<>();
-//        this.projects = new ArrayList<>();
-//        this.workExperiences = new ArrayList<>();
-//        this.educations = new ArrayList<>();
-    }
+    public UserProfile() { }
 
     public UserProfile(Long id, String firstname, String lastname, String phone, String address, List<Link> links, List<Skill> skills, List<Project> projects, List<WorkExperience> workExperiences, List<Education> educations) {
         this.id = id;

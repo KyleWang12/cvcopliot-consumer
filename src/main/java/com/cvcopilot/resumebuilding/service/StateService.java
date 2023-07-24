@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ModificationService {
+public class StateService {
 
   private RedisTemplate<String, String> redisTemplate;
 
@@ -18,7 +18,7 @@ public class ModificationService {
   private ZSetOperations<String, String> zSetOperations;
 
   @Autowired
-  public ModificationService(RedisTemplate<String, String> redisTemplate) {
+  public StateService(RedisTemplate<String, String> redisTemplate) {
     this.redisTemplate = redisTemplate;
   }
 
@@ -28,25 +28,11 @@ public class ModificationService {
     zSetOperations = redisTemplate.opsForZSet();
   }
 
-  public void addOrUpdateModification(String userId, String modificationId, String state, String result) {
-    String modificationKey = "modification:" + modificationId;
+  public void addOrUpdateState(String userId, String modificationId, String state) {
+    String modificationKey = "state:modification:" + modificationId;
     long timestamp = System.currentTimeMillis();
     hashOperations.put(modificationKey, "state", state);
-    hashOperations.put(modificationKey, "result", result);
     hashOperations.put(modificationKey, "userId", userId);
     hashOperations.put(modificationKey, "lastUpdate", String.valueOf(timestamp));
-    zSetOperations.add("user:" + userId, modificationId, timestamp);
-  }
-
-  public Set<String> getAllModificationsForUser(String userId) {
-    return zSetOperations.reverseRange("user:" + userId, 0, -1);
-  }
-
-  public Set<String> getTopKModificationsForUser(String userId, long k) {
-    return zSetOperations.reverseRange("user:" + userId, 0, k - 1);
-  }
-
-  public Map<String, String> getModification(String modificationId) {
-    return hashOperations.entries("modification:" + modificationId);
   }
 }
